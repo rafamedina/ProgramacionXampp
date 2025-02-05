@@ -1,7 +1,7 @@
 <?php
 session_start(); // Inicio la sesión para gestionar la autenticación
 
-require_once '../controlador/UsuariosController.php'; // Incluyo el controlador de usuarios
+require_once '../controlador/UsuarioController.php'; // Incluyo el controlador de usuarios
 $controller = new UsuarioController(); // Creo una instancia del controlador
 $error_message = null; // Variable para manejar errores
 
@@ -11,17 +11,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $contraseña = $_POST['contraseña']; // Obtengo la contraseña ingresada
 
     // Intento iniciar sesión con las credenciales proporcionadas
-    $admin = $controller->iniciarSesion($correo, $contraseña);
+    $usuario = $controller->iniciarSesionUsuarios($correo, $contraseña);
 
-    if (!$admin) { 
+    if (!$usuario) {
         // Si las credenciales son incorrectas, muestro un mensaje de error
         $error_message = "Datos equivocados, prueba de nuevo.";
     } else {
         // Si son correctas, guardo la sesión del admin y redirijo a la página principal
-        $_SESSION['admin'] = $admin;
+        $_SESSION['usuario'] = $usuario;
         $success_message = "Usuario reconocido con éxito.";
-        header("location: ../index2.php");
     }
+    if (!empty($controller->filtrado_usuario($usuario['id_usuario']))) {
+        header("location: ../UsuarioMenu.php");
+    } else {
+        header("location: UsuarioAltaPlan.php");
+    }
+    exit();
 }
 
 ?>
@@ -40,7 +45,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <h1 class="mt-4">INICIAR SESION</h1>
 
         <?php if (isset($error_message)): ?>
-            <p style="color:red;"><?php echo $error_message; ?></p>
+            <p style="color:palevioletred;"><?php echo $error_message; ?></p>
         <?php endif; ?>
         <?php if (isset($success_message)): ?>
             <p style="color:green;"><?php echo $success_message; ?></p>
@@ -56,7 +61,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             </div>
 
             <button type="submit" class="btn btn-primary">Iniciar Sesion</button>
-            
+
         </form>
     </div>
 </body>

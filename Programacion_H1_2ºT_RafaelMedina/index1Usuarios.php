@@ -12,8 +12,8 @@
     <div class="container">
         <h1 class="mt-4">BIENVENIDO A STREAMWEB</h1>
         <div class="list-group">
-            <a href="vista/Admin_iniciosesion_admin.php" class="list-group-item list-group-item-action">Admin</a>
-            <a href="index1Usuarios.php" class="list-group-item list-group-item-action">Usuario</a>
+            <a href="vista/UsuariosRegistro.php" class="list-group-item list-group-item-action">Crear cuenta</a>
+            <a href="vista/UsuarioInicioSesion.php" class="list-group-item list-group-item-action">Iniciar Sesion</a>
         </div>
 
 

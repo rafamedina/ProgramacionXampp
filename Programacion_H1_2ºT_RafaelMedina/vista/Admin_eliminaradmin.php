@@ -1,13 +1,14 @@
 <?php
-require_once '../controlador/UsuariosController.php'; // Incluyo el controlador de usuarios
+require_once '../controlador/AdminController.php'; // Incluyo el controlador de usuarios
 
-$controller = new UsuarioController(); // Creo una instancia del controlador
+$controller = new AdminController(); // Creo una instancia del controlador
 
 session_start(); // Inicio la sesión
 
 // Verifico si el usuario está logueado como admin
 if (!isset($_SESSION['admin'])) {
-    header("Location: iniciosesion_usuarios.php"); // Si no está logueado, lo envío al login
+    session_destroy();
+    header("Location: ../index.php");  // Si no está logueado, lo envío al login
     exit();
 }
 
@@ -17,7 +18,7 @@ $admin = $_SESSION['admin']; // Guardo la información del administrador loguead
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $correo = $_POST['correo']; // Recupero el correo del administrador que quiero eliminar
     $controller->eliminarAdmin($correo); // Llamo al método para eliminar al admin
-    header("Location: eliminaradmin.php"); // Redirijo a la misma página después de eliminar
+    header("Location: Admin_eliminaradmin.php"); // Redirijo a la misma página después de eliminar
     exit();
 }
 
@@ -68,7 +69,7 @@ $tabla = $controller->obtenerAdmin(); // Obtengo la lista de administradores par
             </div>
             <button type="submit" class="btn btn-danger">Eliminar Administrador</button>
         </form>
-        <a href="../index2.php" class="btn btn-secondary mt-3">Volver al Menu</a>
+        <a href="../indexAdmin2.php" class="btn btn-secondary mt-3">Volver al Menu</a>
     </div>
 </body>
 

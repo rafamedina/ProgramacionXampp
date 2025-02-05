@@ -44,11 +44,9 @@ CREATE TABLE Usuarios (
     apellidos VARCHAR(100) NOT NULL,
     correo VARCHAR(100) NOT NULL UNIQUE,
     edad INT NOT NULL CHECK (edad >= 0),
-    telefono int not null
+    telefono int not null,
+    contraseña varchar(200)
 );
-INSERT INTO Usuarios (nombre, apellidos, correo, edad, telefono) 
-VALUES ('Juan', 'Pérez', 'juan.perez@example.com', 30, 123456789),
-('Iker', 'Pérez', 'Iker.perez@example.com', 15, 63263276);
 
 CREATE TABLE Administrador (
     id_admin varchar(50) Primary key,
@@ -75,5 +73,7 @@ CREATE TABLE Resumen (
     FOREIGN KEY (id_plan) REFERENCES Plan(id_plan) ON DELETE CASCADE  ON update CASCADE
 );
 
-
+select * from Resumen;
+select * from usuarios;
+update usuarios set contraseña = "$2a$12$Bq8.wXhaOlVM/k0etLLBouTchF20x3LxOsf2Q1jVcIXPPOhn6PpEi"  where id_usuario = 4;
 

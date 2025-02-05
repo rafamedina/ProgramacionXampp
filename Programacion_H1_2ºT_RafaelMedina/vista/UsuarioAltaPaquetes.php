@@ -1,34 +1,29 @@
 <?php
-require_once '../controlador/UsuariosController.php';
-session_start();
+session_start(); // Inicio la sesión
+require_once '../controlador/UsuarioController.php'; // Incluyo el controlador de usuarios
+$controller = new UsuarioController(); // Creo una instancia del controlador
 
-// Verificar si el usuario está logueado, de lo contrario redirigir al login
-if (!isset($_SESSION['admin'])) {
-    header("Location: iniciosesion_usuarios.php"); // Redirige al login si no está logueado
+
+
+// Verifico si el usuario está logueado como admin
+if (!isset($_SESSION['usuario'])) {
+    echo "Sesión no iniciada o usuario no logueado.";
+    session_destroy();
+    header("Location: ../index.php");  // Si no está logueado, lo envío al login
     exit();
 }
+$idusuario = $_SESSION["usuario"]["id_usuario"];
+$usuario = $controller->obtenerUsuarioporid($idusuario);
 
-$controller = new UsuarioController();
-$paquete = $controller->obtenerPaquetes();
+$idplanUsuario = $controller->obtenerPlandelusuario($idusuario);
 
-$error_message = '';
-$succes_message = '';
-$admin = $_SESSION['admin'];
 
-// Obtener ID del usuario desde GET o POST
-$id_usuario = $_GET['id'] ?? $_POST['id_usuario'] ?? null;
-
-if (!$id_usuario) {
-    echo "ID de usuario no válido o no proporcionado.";
-    exit();
-}
-
-$usuario = $controller->obtenerUsuariosCompletosIndividual2($id_usuario);
-
-if (!$usuario) {
+if (!$idusuario) { // Si no encuentro el usuario, muestro un mensaje y corto la ejecución
     echo "Usuario no encontrado.";
     exit();
 }
+
+
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $id_paquete1 = !empty($_POST['id_paquete1']) ? $_POST['id_paquete1'] : null;
@@ -36,21 +31,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $id_paquete3 = !empty($_POST['id_paquete3']) ? $_POST['id_paquete3'] : null;
 
     // Insertar paquetes en la base de datos
+    $resultado = $controller->insertarPaquete($idplanUsuario["id_usuario"], $idplanUsuario["id_plan"], $id_paquete1, $id_paquete2, $id_paquete3);
 
-
-    $resultado = $controller->insertarPaquete($id_usuario, $usuario["id_plan"], $id_paquete1, $id_paquete2, $id_paquete3);
-
-    if ($resultado !== true) {
+    if (strpos($resultado, "Error") === 0) {
         $error_message = $resultado; // Captura el mensaje de error
     } else {
         // Redirigir manteniendo el ID
-        $succes_message = $resultado;
-        header("Location: agregar_paquetes.php?id=" . $id_usuario);
-        exit();
+        header("Location: ../UsuarioMenu.php");
+        exit(); // Asegúrate de terminar la ejecución inmediatamente
     }
 }
 
-$planUsuario = $controller->obtenerUsuariosCompletosIndividual($usuario["id_usuario"]);
+$paquete = $controller->obtenerPaquetes(); // Obtener paquetes de la base de datos
+
+$planUsuario = $controller->ResumenUsuario($usuario["id_usuario"]);
 ?>
 
 <!DOCTYPE html>
@@ -86,7 +80,6 @@ $planUsuario = $controller->obtenerUsuariosCompletosIndividual($usuario["id_usua
                 <?php endforeach; ?>
             </tbody>
         </table>
-        <a href="../index2.php" class="btn btn-secondary">Volver al menú</a>
     </div>
 
     <div class="container mt-5">
@@ -94,31 +87,38 @@ $planUsuario = $controller->obtenerUsuariosCompletosIndividual($usuario["id_usua
         <table class="table table-striped table-bordered">
             <thead class="table-dark">
                 <tr>
-                    <th>ID</th>
-                    <th>Usuario</th>
+                    <th>ID Resumen</th>
+                    <th>ID Usuario</th>
+                    <th>Nombre</th>
+                    <th>Apellidos</th>
                     <th>Email</th>
-                    <th>Edad</th>
-                    <th>Teléfono</th>
-                    <th>Plan</th>
-                    <th>Paquetes</th>
+                    <th>edad</th>
+                    <th>Telefono</th>
+                    <th>Plan Obtenido</th>
+                    <th>Precio Plan</th>
+                    <th>Paquetes Obtenidos</th>
+                    <th>Precio Paquetes</th>
                     <th>Dispositivos</th>
                     <th>Cuota</th>
                 </tr>
             </thead>
             <tbody>
-                <?php foreach ($planUsuario as $plan): ?>
+                <?php foreach ($planUsuario as $lista): ?>
                     <tr>
-                        <td><?= htmlspecialchars($plan['id_resumen']) ?></td>
-                        <td><?= htmlspecialchars($plan['nombre'] . ' ' . $plan['apellidos']) ?></td>
-                        <td><?= htmlspecialchars($plan['correo']) ?></td>
-                        <td><?= htmlspecialchars($plan['edad']) ?></td>
-                        <td><?= htmlspecialchars($plan['telefono']) ?></td>
-                        <td><?= htmlspecialchars($plan['Plan_Obtenido']) ?></td>
-                        <td><?= htmlspecialchars($plan['Paquetes_Obtenidos']) ?></td>
-                        <td><?= htmlspecialchars($plan['dispositivos']) ?></td>
-                        <td><?= htmlspecialchars($plan['Cuota']) ?></td>
-                    </tr>
-                <?php endforeach; ?>
+                        <td><?= $lista['id_resumen'] ?></td>
+                        <td><?= $lista['id_usuario'] ?></td>
+                        <td><?= $lista['nombre'] ?></td>
+                        <td><?= $lista['apellidos'] ?></td>
+                        <td><?= $lista['correo'] ?></td>
+                        <td><?= $lista['edad'] ?></td>
+                        <td><?= $lista['telefono'] ?></td>
+                        <td><?= $lista['Plan_Obtenido'] ?></td>
+                        <td><?= $lista['precio_plan'] ?></td>
+                        <td><?= $lista['Paquetes_Obtenidos'] ?></td>
+                        <td><?= $lista['precio_paquete'] ?></td>
+                        <td><?= $lista['dispositivos'] ?></td>
+                        <td><?= $lista['Cuota'] ?></td>
+                    <?php endforeach; ?>
             </tbody>
         </table>
     </div>
@@ -131,7 +131,7 @@ $planUsuario = $controller->obtenerUsuariosCompletosIndividual($usuario["id_usua
         <?php if (!empty($succes_message)): ?>
             <div class="alert alert-succes"> <?= htmlspecialchars($succes_message) ?> </div>
         <?php endif; ?>
-        <form method="POST" action="agregar_paquetes.php">
+        <form method="POST">
             <input type="hidden" name="id_usuario" value="<?= htmlspecialchars($id_usuario) ?>">
             <div class="mb-3">
                 <label for="id_paquete1" class="form-label">Paquete 1</label>
@@ -147,7 +147,6 @@ $planUsuario = $controller->obtenerUsuariosCompletosIndividual($usuario["id_usua
             </div>
             <button type="submit" class="btn btn-primary">Contratar</button>
         </form>
-        <button><a href="alta_plan.php" class="list-group-item list-group-item-action">Volver</a></button>
     </div>
 </body>
 

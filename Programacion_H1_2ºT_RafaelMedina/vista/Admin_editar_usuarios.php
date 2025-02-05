@@ -1,33 +1,23 @@
 <?php
 
-require_once '../controlador/UsuariosController.php'; // Incluyo el controlador de usuarios
-$controller = new UsuarioController(); // Creo una instancia del controlador
+require_once '../controlador/AdminController.php'; // Incluyo el controlador de usuarios
+$controller = new AdminController(); // Creo una instancia del controlador
 
 session_start(); // Inicio la sesión
 
 // Verifico si el usuario está logueado como admin
 if (!isset($_SESSION['admin'])) {
-    header("Location: iniciosesion_usuarios.php"); // Si no está logueado, lo envío al login
+    session_destroy();
+    header("Location: ../index.php");  // Si no está logueado, lo envío al login
     exit();
 }
 
-// Compruebo si recibí un ID de usuario por la URL
-if (isset($_GET['id'])) {
-    $id_usuario = $_GET['id'];
-    error_log("ID de usuario recibido: " . $id_usuario); // Registro el ID en el log para depuración
-
-    // Busco la información del usuario con el ID proporcionado
+// Recojo el Id y lo convierto a INT
+if (isset($_GET['id_usuario'])) {
+    $id_usuario = $_GET['id_usuario'];
     $usuario = $controller->obtenerUsuarioporid($id_usuario);
-
-    if (!$usuario) { // Si no encuentro el usuario, muestro un mensaje y corto la ejecución
-        echo "Usuario no encontrado.";
-        exit();
-    } else {
-        error_log("Usuario encontrado: " . print_r($usuario, true)); // Registro los datos del usuario en el log
-    }
 } else {
-    echo "ID de usuario no proporcionado."; // Si no hay ID en la URL, muestro un mensaje y corto la ejecución
-    exit();
+    echo "No se proporcionó un ID de usuario.";
 }
 
 $admin = $_SESSION['admin']; // Guardo los datos del admin que inició sesión
@@ -47,7 +37,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $controller->actualizarUsuario($usuario['id_usuario'], $nombre, $apellidos, $correo, $edad, $telefono);
 
     // Redirijo a la página de alta de usuarios después de actualizar
-    header("Location: alta_usuarios.php");
+    header("Location: Admin_editar_usuarios.php?id_usuario=" . $usuario["id_usuario"]);
 }
 
 ?>
@@ -94,14 +84,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <label for="telefono">Teléfono:</label>
                 <input type="number" class="form-control" id="telefono" name="telefono" value="<?php echo htmlspecialchars($usuario['telefono'] ?? '', ENT_QUOTES, 'UTF-8'); ?>" required>
             </div>
-            <br>
-            <br>
-            <button><a href="../vista/alta_usuarios.php" class="list-group-item list-group-item-action">Volver</a></button>
-            <br>
-            <br>
             <button type="submit" class="btn btn-primary mt-3">Actualizar Perfil</button>
-            <a href="../index2.php" class="btn btn-danger mt-3">Volver</a>
         </form>
+        <button><a href="../vista/Admin_alta_usuarios.php" class="list-group-item list-group-item-action">Volver</a></button>
     </div>
 </body>
 

@@ -12,10 +12,10 @@
     <div class="container">
         <h1 class="mt-4">Usuario Aceptado</h1>
         <div class="list-group">
-            <a href="vista/alta_usuarios.php" class="list-group-item list-group-item-action">Registrar Usuarios</a>
-            <a href="vista/listar_usuarios.php" class="list-group-item list-group-item-action">Ver Resumen de usuarios</a>
-            <a href="vista/alta_admin.php" class="list-group-item list-group-item-action">Añadir Admin</a>
-            <a href="vista/eliminaradmin.php" class="list-group-item list-group-item-action">Eliminar Admin</a>
+            <a href="vista/Admin_alta_usuarios.php" class="list-group-item list-group-item-action">Registrar Usuarios</a>
+            <a href="vista/Admin_listar_usuarios.php" class="list-group-item list-group-item-action">Ver Resumen de usuarios</a>
+            <a href="vista/Admin_alta_admin.php" class="list-group-item list-group-item-action">Añadir Admin</a>
+            <a href="vista/Admin_eliminaradmin.php" class="list-group-item list-group-item-action">Eliminar Admin</a>
             <a href="vista/cerrar_sesion.php" class="list-group-item list-group-item-action">Salir de la sesión</a>
         </div>
     </div>

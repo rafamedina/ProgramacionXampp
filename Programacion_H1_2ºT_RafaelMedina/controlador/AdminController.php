@@ -1,13 +1,13 @@
 <?php
-require_once '../modelo/class_usuario.php';
+require_once '../modelo/class_admin.php';
 
-class UsuarioController
+class AdminController
 {
     private $modelo;
 
     public function __construct()
     {
-        $this->modelo = new Usuario();
+        $this->modelo = new Admin();
     }
 
     public function agregarAdmin($idadmin, $nombre, $apellidos, $correo, $contraseña)
@@ -15,9 +15,9 @@ class UsuarioController
         return $this->modelo->agregarAdmin($idadmin, $nombre, $apellidos, $correo, $contraseña);
     }
 
-    public function agregarUsuario($nombre, $apellidos, $correo, $edad, $telefono)
+    public function agregarUsuario($nombre, $apellidos, $correo, $edad, $telefono, $contraseña)
     {
-        return $this->modelo->agregarUsuario($nombre, $apellidos, $correo, $edad, $telefono);
+        return $this->modelo->agregarUsuario($nombre, $apellidos, $correo, $edad, $telefono, $contraseña);
     }
 
     public function obtenerUsuario()

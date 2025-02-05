@@ -3,13 +3,14 @@ session_start(); // Inicia la sesión para poder acceder a las variables de sesi
 
 // Verifica si el usuario está logueado como admin
 if (!isset($_SESSION['admin'])) { 
-    header("Location: iniciosesion_usuarios.php"); // Si no es admin, lo redirige al inicio de sesión
+    session_destroy();
+    header("Location: ../index.php");  // Si no es admin, lo redirige al inicio de sesión
     exit();
 }
 
 // Importa el controlador que maneja los usuarios
-require_once '../controlador/UsuariosController.php';
-$controller = new UsuarioController(); // Crea una instancia del controlador de usuarios
+require_once '../controlador/AdminController.php';
+$controller = new AdminController(); // Crea una instancia del controlador de usuarios
 $error_message = ''; // Variable para almacenar posibles errores
 
 // Si el formulario se envió con el método POST
@@ -28,7 +29,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $error_message = "Error al agregar Usuario. Por favor, verifica los datos.";
     } else { // Si se agregó correctamente
         $success_message = "Administrador agregado con éxito.";
-        header("Location: ../index2.php"); // Redirige a la página principal
+        header("Location: ../indexAdmin2.php"); // Redirige a la página principal
         exit();
     }
 }
@@ -81,7 +82,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <button type="submit" class="btn btn-primary">Registrarme</button>
             <!-- Botón para volver al menú principal -->
             <button>
-                <a href="../index2.php" class="list-group-item list-group-item-action">Volver al menú</a>
+                <a href="../indexAdmin2.php" class="list-group-item list-group-item-action">Volver al menú</a>
             </button>
         </form>
     </div>

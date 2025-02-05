@@ -1,14 +1,15 @@
 <?php
-require_once '../controlador/UsuariosController.php';
+require_once '../controlador/AdminController.php';
 session_start(); // Inicio la sesión para gestionar la autenticación
 
 // Verifico si el usuario está logueado como admin
 if (!isset($_SESSION['admin'])) {
-    header("Location: iniciosesion_usuarios.php"); // Si no está logueado, lo redirijo al login
+    session_destroy();
+    header("Location: ../index.php");  // Si no está logueado, lo redirijo al login
     exit();
 }
 
-$controller = new UsuarioController(); // Creo una instancia del controlador
+$controller = new AdminController(); // Creo una instancia del controlador
 $error_message = ''; // Variable para manejar errores (aunque aquí no se usa aún)
 
 // Obtengo la lista de usuarios con toda su información
@@ -73,15 +74,14 @@ $lista = $controller->obtenerUsuariosCompletos();
                             <td><?= $lista['dispositivos'] ?></td>
                             <td><?= $lista['Cuota'] ?></td>
                             <td>
-                                <a href="eliminarplan.php?id=<?= $lista['id_usuario'] ?>" class="btn btn-warning">Cambiar Plan</a>
-
+                                <a href="Admin_eliminarplan.php?id_usuario=<?= $lista['id_usuario'] ?>" class="btn btn-warning">Cambiar Plan y Paquetes</a>
                             </td>
                         </tr>
                     <?php endforeach; ?>
                 </tbody>
             </table>
             <br>
-            <button><a href="../index2.php" class="list-group-item list-group-item-action">Volver al menú</a></button>
+            <button><a href="../indexAdmin2.php" class="list-group-item list-group-item-action">Volver al menú</a></button>
         </div>
 </body>
 
