@@ -1,51 +1,46 @@
 <?php
-session_start(); // Inicio la sesión
+session_start(); // Inicio sesión
 require_once '../controlador/UsuarioController.php'; // Incluyo el controlador de usuarios
-$controller = new UsuarioController(); // Creo una instancia del controlador
+$controller = new UsuarioController(); // Instancio el controlador
 
-
-
-// Verifico si el usuario está logueado como admin
+// Verifico si el usuario está logueado
 if (!isset($_SESSION['usuario'])) {
     echo "Sesión no iniciada o usuario no logueado.";
     session_destroy();
-    header("Location: ../index.php");  // Si no está logueado, lo envío al login
+    header("Location: ../index.php");  // Redirijo al login si no está logueado
     exit();
 }
+
 $idusuario = $_SESSION["usuario"]["id_usuario"];
 $usuario = $controller->obtenerUsuarioporid($idusuario);
 
 $idplanUsuario = $controller->obtenerPlandelusuario($idusuario);
 
-
-if (!$idusuario) { // Si no encuentro el usuario, muestro un mensaje y corto la ejecución
+if (!$idusuario) { // Verifico si existe el usuario
     echo "Usuario no encontrado.";
     exit();
 }
 
-
-
+// Si el formulario fue enviado, inserto los paquetes seleccionados
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $id_paquete1 = !empty($_POST['id_paquete1']) ? $_POST['id_paquete1'] : null;
     $id_paquete2 = !empty($_POST['id_paquete2']) ? $_POST['id_paquete2'] : null;
     $id_paquete3 = !empty($_POST['id_paquete3']) ? $_POST['id_paquete3'] : null;
 
-    // Insertar paquetes en la base de datos
     $resultado = $controller->insertarPaquete($idplanUsuario["id_usuario"], $idplanUsuario["id_plan"], $id_paquete1, $id_paquete2, $id_paquete3);
 
     if (strpos($resultado, "Error") === 0) {
-        $error_message = $resultado; // Captura el mensaje de error
+        $error_message = $resultado; // Capturo el error si ocurre
     } else {
-        // Redirigir manteniendo el ID
-        header("Location: ../UsuarioMenu.php");
-        exit(); // Asegúrate de terminar la ejecución inmediatamente
+        header("Location: ../UsuarioMenu.php"); // Redirijo después de la inserción
+        exit(); // Aseguro que el script termine aquí
     }
 }
 
-$paquete = $controller->obtenerPaquetes(); // Obtener paquetes de la base de datos
-
-$planUsuario = $controller->ResumenUsuario($usuario["id_usuario"]);
+$paquete = $controller->obtenerPaquetes(); // Obtengo los paquetes disponibles
+$planUsuario = $controller->ResumenUsuario($usuario["id_usuario"]); // Obtengo el resumen del plan del usuario
 ?>
+
 
 <!DOCTYPE html>
 <html lang="es">

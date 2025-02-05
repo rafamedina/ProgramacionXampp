@@ -1,11 +1,11 @@
 <?php
-session_start(); // Inicio la sesión para gestionar la autenticación
+session_start(); // Inicio sesión para gestionar la autenticación
 
 require_once '../controlador/UsuarioController.php'; // Incluyo el controlador de usuarios
-$controller = new UsuarioController(); // Creo una instancia del controlador
+$controller = new UsuarioController(); // Instancio el controlador
 $error_message = null; // Variable para manejar errores
 
-// Verifico si el formulario ha sido enviado
+// Verifico si el formulario fue enviado
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $correo = $_POST['correo']; // Obtengo el correo ingresado
     $contraseña = $_POST['contraseña']; // Obtengo la contraseña ingresada
@@ -17,17 +17,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // Si las credenciales son incorrectas, muestro un mensaje de error
         $error_message = "Datos equivocados, prueba de nuevo.";
     } else {
-        // Si son correctas, guardo la sesión del admin y redirijo a la página principal
+        // Si son correctas, guardo la sesión del usuario
         $_SESSION['usuario'] = $usuario;
         $success_message = "Usuario reconocido con éxito.";
     }
+
+    // Verifico si el usuario tiene un plan asignado
     if (!empty($controller->filtrado_usuario($usuario['id_usuario']))) {
-        header("location: ../UsuarioMenu.php");
+        header("location: ../UsuarioMenu.php"); // Redirijo al menú del usuario si tiene un plan
     } else {
-        header("location: UsuarioAltaPlan.php");
+        header("location: UsuarioAltaPlan.php"); // Si no tiene un plan, lo redirijo a la página de alta
     }
     exit();
 }
+?>
+
 
 ?>
 

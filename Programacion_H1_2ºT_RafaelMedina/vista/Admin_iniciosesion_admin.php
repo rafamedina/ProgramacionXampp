@@ -1,23 +1,23 @@
 <?php
-session_start(); // Inicio la sesión para gestionar la autenticación
+session_start(); // Inicio la sesión para gestionar autenticación
 
 require_once '../controlador/AdminController.php'; // Incluyo el controlador de usuarios
-$controller = new AdminController(); // Creo una instancia del controlador
+$controller = new AdminController(); // Instancio el controlador
 $error_message = null; // Variable para manejar errores
 
-// Verifico si el formulario ha sido enviado
+// Verifico si el formulario fue enviado
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $correo = $_POST['correo']; // Obtengo el correo ingresado
     $contraseña = $_POST['contraseña']; // Obtengo la contraseña ingresada
 
-    // Intento iniciar sesión con las credenciales proporcionadas
+    // Intento iniciar sesión con las credenciales
     $admin = $controller->iniciarSesion($correo, $contraseña);
 
-    if (!$admin) { 
-        // Si las credenciales son incorrectas, muestro un mensaje de error
+    if (!$admin) {
+        // Si las credenciales son incorrectas, muestro error
         $error_message = "Datos equivocados, prueba de nuevo.";
     } else {
-        // Si son correctas, guardo la sesión del admin y redirijo a la página principal
+        // Si son correctas, inicio sesión y redirijo al panel de admin
         $_SESSION['admin'] = $admin;
         $success_message = "Usuario reconocido con éxito.";
         header("location: ../indexAdmin2.php");
@@ -25,6 +25,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 }
 
 ?>
+
 
 <!DOCTYPE html>
 <html lang="es">
@@ -56,7 +57,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             </div>
 
             <button type="submit" class="btn btn-primary">Iniciar Sesion</button>
-            
+
         </form>
     </div>
 </body>

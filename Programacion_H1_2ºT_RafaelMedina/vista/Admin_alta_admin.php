@@ -1,19 +1,18 @@
 <?php
-session_start(); // Inicia la sesión para poder acceder a las variables de sesión
+session_start(); // Inicia la sesión
 
-// Verifica si el usuario está logueado como admin
-if (!isset($_SESSION['admin'])) { 
+// Verifica si el usuario es admin, si no, lo redirige
+if (!isset($_SESSION['admin'])) {
     session_destroy();
-    header("Location: ../index.php");  // Si no es admin, lo redirige al inicio de sesión
+    header("Location: ../index.php");
     exit();
 }
 
-// Importa el controlador que maneja los usuarios
 require_once '../controlador/AdminController.php';
-$controller = new AdminController(); // Crea una instancia del controlador de usuarios
-$error_message = ''; // Variable para almacenar posibles errores
+$controller = new AdminController();
+$error_message = '';
 
-// Si el formulario se envió con el método POST
+// Si se envió el formulario por POST
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Obtiene los datos del formulario
     $idadmin = $_POST['id_admin'];
@@ -22,32 +21,34 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $correo = $_POST['correo'];
     $contraseña = $_POST['contraseña'];
 
-    // Llama al método del controlador para agregar un nuevo administrador
+    // Agrega un nuevo administrador
     $usuario = $controller->agregarAdmin($idadmin, $nombre, $apellidos, $correo, $contraseña);
 
-    if (!$usuario) { // Si hubo un error al agregar el usuario
-        $error_message = "Error al agregar Usuario. Por favor, verifica los datos.";
-    } else { // Si se agregó correctamente
-        $success_message = "Administrador agregado con éxito.";
-        header("Location: ../indexAdmin2.php"); // Redirige a la página principal
+    // Verifica si hubo un error
+    if (!$usuario) {
+        $error_message = "Error al agregar Usuario.";
+    } else {
+        header("Location: ../indexAdmin2.php");
         exit();
     }
 }
 ?>
 
+
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <title>Agregar Usuario</title>
-    <!-- Importa Bootstrap para los estilos -->
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
+
 <body>
     <div class="container">
         <h1 class="mt-4">Agregar Usuario</h1>
 
-        <!-- Muestra mensajes de error o éxito -->
         <?php if (isset($error_message)): ?>
             <p style="color:red;"><?php echo $error_message; ?></p>
         <?php endif; ?>
@@ -55,7 +56,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <p style="color:green;"><?php echo $success_message; ?></p>
         <?php endif; ?>
 
-        <!-- Formulario para agregar un administrador -->
         <form method="POST" action="" class="mt-4">
             <div class="form-group">
                 <label for="id_admin">ID Admin:</label>
@@ -78,13 +78,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <input type="password" class="form-control" id="contraseña" name="contraseña" required>
             </div>
 
-            <!-- Botón para enviar el formulario -->
+
             <button type="submit" class="btn btn-primary">Registrarme</button>
-            <!-- Botón para volver al menú principal -->
+
             <button>
                 <a href="../indexAdmin2.php" class="list-group-item list-group-item-action">Volver al menú</a>
             </button>
         </form>
     </div>
 </body>
+
 </html>

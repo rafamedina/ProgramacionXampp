@@ -1,15 +1,12 @@
 <?php
 require_once '../controlador/UsuarioController.php'; // Incluyo el controlador de usuarios
 
+$controller = new UsuarioController(); // Instancio el controlador
+$error_message = ''; // Variable para manejar errores
 
-
-
-$controller = new UsuarioController(); // Creo una instancia del controlador
-$error_message = ''; // Defino una variable para manejar posibles errores
-
-// Compruebo si se ha enviado el formulario
+// Verifico si se ha enviado el formulario
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Recupero los datos enviados desde el formulario
+    // Recupero los datos del formulario
     $nombre = $_POST['nombre'];
     $apellidos = $_POST['apellido'];
     $correo = $_POST['correo'];
@@ -20,16 +17,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Intento agregar un nuevo usuario con los datos proporcionados
     $usuario = $controller->agregarUsuario($nombre, $apellidos, $correo, $edad, $telefono, $contraseña);
 
-    if (!$usuario) { // Si falla, guardo un mensaje de error
+    if (!$usuario) { // Si el proceso falla, muestro un mensaje de error
         $error_message = "Error al agregar Usuario. Por favor, verifica los datos.";
-    } else { // Si se agrega correctamente, guardo el mensaje de éxito y redirijo a otra página
+    } else { // Si el usuario se agrega correctamente, redirijo a la página de usuarios
         $success_message = "Usuario agregado con éxito.";
-        header("location: ../index1Usuarios.php"); // Redirijo a la página de alta de usuarios
+        header("location: ../index1Usuarios.php"); // Redirijo a la página principal de usuarios
         exit();
     }
 }
 
 ?>
+
 
 <!DOCTYPE html>
 <html lang="es">

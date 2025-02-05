@@ -1,39 +1,42 @@
 <?php
 require_once '../controlador/UsuarioController.php'; // Incluyo el controlador de usuarios
-$controller = new UsuarioController(); // Creo una instancia del controlador
+$controller = new UsuarioController(); // Instancio el controlador
 
-session_start(); // Inicio la sesión
+session_start(); // Inicio sesión
 
-// Verifico si el usuario está logueado como admin
+// Verifico si el usuario está logueado
 if (!isset($_SESSION['usuario'])) {
     session_destroy();
-    header("Location: ../index.php");  // Si no está logueado, lo envío al login
+    header("Location: ../index.php");  // Redirijo al login si no está logueado
     exit();
 }
+
 $idusuario = $_SESSION["usuario"]["id_usuario"];
 $usuario = $controller->obtenerUsuarioporid($idusuario);
 
-
-if (!$idusuario) { // Si no encuentro el usuario, muestro un mensaje y corto la ejecución
+if (!$idusuario) { // Verifico si el usuario existe
     echo "Usuario no encontrado.";
     exit();
 }
-$plan = $controller->obtenerPlanes();
-// Compruebo si enviaron el formulario
+
+$plan = $controller->obtenerPlanes(); // Obtengo los planes disponibles
+
+// Si el formulario fue enviado, agrego el plan
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $id_plan = $_POST['id_plan']; // Guardo el ID del plan enviado en el formulario
+    $id_plan = $_POST['id_plan']; // Guardo el ID del plan seleccionado
 
     $controller->altaPlan($usuario["id_usuario"], $id_plan, NULL, NULL, NULL);
     $success_message = "Plan agregado con éxito.";
 
-    // Redirijo a la página de alta de usuarios
-    header("Location: UsuarioAltaPaquetes.php");
+    header("Location: UsuarioAltaPaquetes.php"); // Redirijo tras agregar el plan
     exit();
 } else {
-    $error_message = "Error al agregar Plan."; // Si hay un problema, muestro un mensaje de error
+    $error_message = "Error al agregar Plan."; // Si ocurre un error, muestro mensaje
 }
+
 $error_message = null;
 ?>
+
 
 <!DOCTYPE html>
 <html lang="es">

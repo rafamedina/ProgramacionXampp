@@ -1,27 +1,27 @@
 <?php
 require_once '../controlador/UsuarioController.php'; // Incluyo el controlador de usuarios
-$controller = new UsuarioController(); // Creo una instancia del controlador
+$controller = new UsuarioController(); // Instancio el controlador
 
-session_start(); // Inicio la sesión
+session_start(); // Inicio sesión
 
-// Verifico si el usuario está logueado como admin
+// Verifico si el usuario está logueado
 if (!isset($_SESSION['usuario'])) {
     session_destroy();
-    header("Location: ../index.php");  // Si no está logueado, lo envío al login
+    header("Location: ../index.php");  // Redirijo al login si no está logueado
     exit();
 }
+
 $idusuario = $_SESSION["usuario"]["id_usuario"];
 $usuario = $controller->obtenerUsuarioporid($idusuario);
 
-
-if (!$idusuario) { // Si no encuentro el usuario, muestro un mensaje y corto la ejecución
+if (!$idusuario) { // Verifico si el usuario existe
     echo "Usuario no encontrado.";
     exit();
 }
-$lista = $controller->ResumenUsuario($usuario["id_usuario"]);
 
-
+$lista = $controller->ResumenUsuario($usuario["id_usuario"]); // Obtengo la información del usuario
 ?>
+
 <!DOCTYPE html>
 <html lang="es">
 

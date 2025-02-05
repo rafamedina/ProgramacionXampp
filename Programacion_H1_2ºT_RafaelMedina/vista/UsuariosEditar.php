@@ -5,25 +5,24 @@ $controller = new UsuarioController(); // Creo una instancia del controlador
 
 session_start(); // Inicio la sesión
 
-// Verifico si el usuario está logueado como admin
+// Verifico si el usuario está logueado
 if (!isset($_SESSION['usuario'])) {
     session_destroy();
-    header("Location: ../index.php");  // Si no está logueado, lo envío al login
+    header("Location: ../index.php");  // Redirijo al login si no está logueado
     exit();
 }
+
 $idusuario = $_SESSION["usuario"]["id_usuario"];
 $usuario = $controller->obtenerUsuarioporid($idusuario);
 
-
-if (!$idusuario) { // Si no encuentro el usuario, muestro un mensaje y corto la ejecución
+if (!$idusuario) { // Verifico si el usuario existe
     echo "Usuario no encontrado.";
     exit();
 }
 
-
 $error_message = null; // Inicializo la variable de error
 
-// Compruebo si se envió el formulario
+// Verifico si el formulario ha sido enviado
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Recupero los datos del formulario
     $nombre = $_POST['nombre'];
@@ -35,10 +34,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // Llamo al método para actualizar los datos del usuario
     $actualizar = $controller->actualizarUsuario($idusuario, $nombre, $apellidos, $correo, $edad, $telefono, $contraseña);
-    header("Location: UsuariosEditar.php");
+    header("Location: UsuariosEditar.php"); // Redirijo a la página de edición
 }
 
 ?>
+
 
 <!DOCTYPE html>
 <html lang="es">

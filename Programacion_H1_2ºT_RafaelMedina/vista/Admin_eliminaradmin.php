@@ -1,30 +1,31 @@
 <?php
-require_once '../controlador/AdminController.php'; // Incluyo el controlador de usuarios
+require_once '../controlador/AdminController.php'; // Importo el controlador
 
-$controller = new AdminController(); // Creo una instancia del controlador
+$controller = new AdminController(); // Instancio el controlador
 
-session_start(); // Inicio la sesión
+session_start(); // Inicio sesión
 
-// Verifico si el usuario está logueado como admin
+// Verifico si el usuario es admin
 if (!isset($_SESSION['admin'])) {
     session_destroy();
-    header("Location: ../index.php");  // Si no está logueado, lo envío al login
+    header("Location: ../index.php"); // Redirijo si no es admin
     exit();
 }
 
-$admin = $_SESSION['admin']; // Guardo la información del administrador logueado
+$admin = $_SESSION['admin']; // Guardo datos del admin logueado
 
-// Compruebo si se envió el formulario por POST
+// Si se envía el formulario, elimino al administrador
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $correo = $_POST['correo']; // Recupero el correo del administrador que quiero eliminar
-    $controller->eliminarAdmin($correo); // Llamo al método para eliminar al admin
-    header("Location: Admin_eliminaradmin.php"); // Redirijo a la misma página después de eliminar
+    $correo = $_POST['correo'];
+    $controller->eliminarAdmin($correo);
+    header("Location: Admin_eliminaradmin.php"); // Redirijo tras eliminar
     exit();
 }
 
-$tabla = $controller->obtenerAdmin(); // Obtengo la lista de administradores para mostrarla en la vista
+$tabla = $controller->obtenerAdmin(); // Obtengo la lista de administradores
 
 ?>
+
 
 <!DOCTYPE html>
 <html lang="es">

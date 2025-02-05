@@ -4,17 +4,16 @@ require_once '../controlador/AdminController.php'; // Importo el controlador de 
 
 $controller = new AdminController(); // Creo el objeto controlador
 
-session_start(); // Inicio la sesión para gestionar la autenticación
+session_start(); // Inicio sesión para gestionar autenticación
 
 // Verifico si el usuario está logueado como administrador
 if (!isset($_SESSION['admin'])) {
     session_destroy();
-    header("Location: ../index.php");  // Si no es admin, lo redirijo al login
+    header("Location: ../index.php");  // Redirijo si no es admin
     exit();
 }
 
 // Obtengo el ID del usuario desde GET o POST
-// Recojo el Id y lo convierto a INT
 if (isset($_GET['id_usuario'])) {
     $id_usuario = $_GET['id_usuario'];
     $usuario = $controller->obtenerUsuarioporid($id_usuario);
@@ -22,25 +21,26 @@ if (isset($_GET['id_usuario'])) {
     echo "No se proporcionó un ID de usuario.";
 }
 
-if (!$id_usuario) { // Si el ID no es válido o no existe, muestro un error y detengo el script
+if (!$id_usuario) { // Verifico que el ID sea válido
     echo "ID de usuario no válido o no proporcionado.";
     exit();
 }
 
-// Obtengo los datos completos del usuario usando su ID
+// Obtengo los datos completos del usuario
 $usuario = $controller->obtenerUsuariosCompletosIndividual2($usuario["id_usuario"]);
 
 // Si el formulario fue enviado, elimino el plan del usuario
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $controller->eliminarplan($usuario["id_usuario"]); // Llamo al método para eliminar el plan del usuario
-    header("Location: Admin_alta_plan.php?id_usuario=" . $usuario["id_usuario"]); // Redirijo a la página de gestión de usuarios
+    $controller->eliminarplan($usuario["id_usuario"]); // Elimino el plan del usuario
+    header("Location: Admin_alta_plan.php?id_usuario=" . $usuario["id_usuario"]); // Redirijo a la gestión de planes
     exit();
 }
 
-// Obtengo la información del plan del usuario para mostrarlo en la interfaz
+// Obtengo la información del plan del usuario para mostrarla
 $planUsuario = $controller->obtenerUsuariosCompletosIndividual($usuario["id_usuario"]);
 
 ?>
+
 
 <!DOCTYPE html>
 <html lang="es">

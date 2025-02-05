@@ -1,21 +1,21 @@
 <?php
-require_once '../controlador/AdminController.php'; // Incluyo el controlador de usuarios
+require_once '../controlador/AdminController.php'; // Incluyo el controlador
 session_start(); // Inicio la sesión
 
-// Compruebo si el usuario está logueado como admin
+// Verifico si el usuario es admin, si no, lo redirijo
 if (!isset($_SESSION['admin'])) {
     session_destroy();
-    header("Location: ../index.php");  // Si no está logueado, lo envío al login
+    header("Location: ../index.php");
     exit();
 }
 
-$controller = new AdminController(); // Creo una instancia del controlador
+$controller = new AdminController();
 $plan = $controller->ObtenerPlanes(); // Obtengo los planes disponibles
 
-$error_message = ''; // Variable para guardar posibles errores
-$admin = $_SESSION['admin']; // Guardo los datos del admin que inició sesión
+$error_message = '';
+$admin = $_SESSION['admin'];
 
-// Recojo el Id y lo convierto a INT
+// Obtengo el ID del usuario
 if (isset($_GET['id_usuario'])) {
     $id_usuario = $_GET['id_usuario'];
     $usuario = $controller->obtenerUsuarioporid($id_usuario);
@@ -23,24 +23,22 @@ if (isset($_GET['id_usuario'])) {
     echo "No se proporcionó un ID de usuario.";
 }
 
-
-// Compruebo si enviaron el formulario
+// Si se envió el formulario por POST
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $id_plan = $_POST['id_plan']; // Guardo el ID del plan enviado en el formulario
+    $id_plan = $_POST['id_plan']; // Obtengo el ID del plan seleccionado
 
     // Verifico si el usuario puede tener otro plan
     if ($controller->cantidadPlanes($usuario["id_usuario"])) {
-        // Si puede, le asigno el nuevo plan
+        // Asigno el nuevo plan
         $controller->altaPlan($usuario["id_usuario"], $id_plan, NULL, NULL, NULL);
-        $success_message = "Plan agregado con éxito.";
-
-        // Redirijo a la página de alta de usuarios
         header("Location: Admin_agregar_paquetes.php?id_usuario=" . $usuario["id_usuario"]);
         exit();
     } else {
-        $error_message = "Error al agregar Plan."; // Si hay un problema, muestro un mensaje de error
+        $error_message = "Error al agregar Plan.";
     }
 }
+?>
+
 
 
 

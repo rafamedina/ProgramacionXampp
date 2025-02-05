@@ -1,35 +1,36 @@
 <?php
 
-
 require_once '../controlador/UsuarioController.php'; // Incluyo el controlador de usuarios
-$controller = new UsuarioController(); // Creo una instancia del controlador
+$controller = new UsuarioController(); // Instancio el controlador
 
-session_start(); // Inicio la sesión
+session_start(); // Inicio sesión
 
-// Verifico si el usuario está logueado como admin
+// Verifico si el usuario está logueado
 if (!isset($_SESSION['usuario'])) {
     session_destroy();
-    header("Location: ../index.php");  // Si no está logueado, lo envío al login
+    header("Location: ../index.php");  // Redirijo al login si no está logueado
     exit();
 }
+
 $idusuario = $_SESSION["usuario"]["id_usuario"];
 $usuario = $controller->obtenerUsuarioporid($idusuario);
 
-
-if (!$idusuario) { // Si no encuentro el usuario, muestro un mensaje y corto la ejecución
+if (!$idusuario) { // Verifico si existe el usuario
     echo "Usuario no encontrado.";
     exit();
 }
 
-// Obtengo la información del plan del usuario para mostrarlo en la interfaz
+// Obtengo la información del plan del usuario
 $lista = $controller->ResumenUsuario($usuario["id_usuario"]);
 
-// Si el formulario fue enviado, elimino el plan del usuario
+// Si el formulario fue enviado, elimino el plan
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $controller->eliminarplan($usuario["id_usuario"]); // Llamo al método para eliminar el plan del usuario
-    header("Location: UsuarioAltaPlan.php"); // Redirijo a la página de gestión de usuarios
+    $controller->eliminarplan($usuario["id_usuario"]); // Elimino el plan del usuario
+    header("Location: UsuarioAltaPlan.php"); // Redirijo después de eliminar
     exit();
 }
+?>
+
 
 
 
@@ -55,39 +56,39 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <h2>Plan y Paquetes Actuales</h2>
                 <table class="table table-striped table-bordered">
                     <thead class="table-dark">
-                    <tr>
-                        <th>ID Resumen</th>
-                        <th>ID Usuario</th>
-                        <th>Nombre</th>
-                        <th>Apellidos</th>
-                        <th>Email</th>
-                        <th>edad</th>
-                        <th>Telefono</th>
-                        <th>Plan Obtenido</th>
-                        <th>Precio Plan</th>
-                        <th>Paquetes Obtenidos</th>
-                        <th>Precio Paquetes</th>
-                        <th>Dispositivos</th>
-                        <th>Cuota</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php foreach ($lista as $lista): ?>
                         <tr>
-                            <td><?= $lista['id_resumen'] ?></td>
-                            <td><?= $lista['id_usuario'] ?></td>
-                            <td><?= $lista['nombre'] ?></td>
-                            <td><?= $lista['apellidos'] ?></td>
-                            <td><?= $lista['correo'] ?></td>
-                            <td><?= $lista['edad'] ?></td>
-                            <td><?= $lista['telefono'] ?></td>
-                            <td><?= $lista['Plan_Obtenido'] ?></td>
-                            <td><?= $lista['precio_plan'] ?></td>
-                            <td><?= $lista['Paquetes_Obtenidos'] ?></td>
-                            <td><?= $lista['precio_paquete'] ?></td>
-                            <td><?= $lista['dispositivos'] ?></td>
-                            <td><?= $lista['Cuota'] ?></td>
+                            <th>ID Resumen</th>
+                            <th>ID Usuario</th>
+                            <th>Nombre</th>
+                            <th>Apellidos</th>
+                            <th>Email</th>
+                            <th>edad</th>
+                            <th>Telefono</th>
+                            <th>Plan Obtenido</th>
+                            <th>Precio Plan</th>
+                            <th>Paquetes Obtenidos</th>
+                            <th>Precio Paquetes</th>
+                            <th>Dispositivos</th>
+                            <th>Cuota</th>
                         </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($lista as $lista): ?>
+                            <tr>
+                                <td><?= $lista['id_resumen'] ?></td>
+                                <td><?= $lista['id_usuario'] ?></td>
+                                <td><?= $lista['nombre'] ?></td>
+                                <td><?= $lista['apellidos'] ?></td>
+                                <td><?= $lista['correo'] ?></td>
+                                <td><?= $lista['edad'] ?></td>
+                                <td><?= $lista['telefono'] ?></td>
+                                <td><?= $lista['Plan_Obtenido'] ?></td>
+                                <td><?= $lista['precio_plan'] ?></td>
+                                <td><?= $lista['Paquetes_Obtenidos'] ?></td>
+                                <td><?= $lista['precio_paquete'] ?></td>
+                                <td><?= $lista['dispositivos'] ?></td>
+                                <td><?= $lista['Cuota'] ?></td>
+                            </tr>
                         <?php endforeach; ?>
                     </tbody>
                 </table>

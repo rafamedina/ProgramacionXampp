@@ -1,20 +1,20 @@
 <?php
-require_once '../controlador/AdminController.php'; // Incluyo el controlador de usuarios
+require_once '../controlador/AdminController.php'; // Importo el controlador
 session_start(); // Inicio la sesión
 
-// Verifico si el usuario está logueado como admin
+// Verifico si el usuario es admin, si no, lo redirijo
 if (!isset($_SESSION['admin'])) {
     session_destroy();
-    header("Location: ../index.php");  // Si no está logueado, lo envío al login
+    header("Location: ../index.php");
     exit();
 }
 
-$controller = new AdminController(); // Creo una instancia del controlador
-$error_message = ''; // Defino una variable para manejar posibles errores
+$controller = new AdminController();
+$error_message = '';
 
-// Compruebo si se ha enviado el formulario
+// Si se envió el formulario por POST
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Recupero los datos enviados desde el formulario
+    // Recupero los datos del formulario
     $nombre = $_POST['nombre'];
     $apellidos = $_POST['apellido'];
     $correo = $_POST['correo'];
@@ -22,22 +22,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $telefono = $_POST['telefono'];
     $contraseña = $_POST['password'];
 
-    // Intento agregar un nuevo usuario con los datos proporcionados
+    // Intento agregar un nuevo usuario
     $usuario = $controller->agregarUsuario($nombre, $apellidos, $correo, $edad, $telefono, $contraseña);
 
-    if (!$usuario) { // Si falla, guardo un mensaje de error
-        $error_message = "Error al agregar Usuario. Por favor, verifica los datos.";
-    } else { // Si se agrega correctamente, guardo el mensaje de éxito y redirijo a otra página
-        $success_message = "Usuario agregado con éxito.";
-        header("location: Admin_alta_usuarios.php"); // Redirijo a la página de alta de usuarios
+    // Verifico si hubo un error
+    if (!$usuario) {
+        $error_message = "Error al agregar Usuario.";
+    } else {
+        header("location: Admin_alta_usuarios.php");
         exit();
     }
 }
 
-// Obtengo la lista de usuarios existentes
+// Obtengo la lista de usuarios
 $lista = $controller->obtenerUsuario();
 
 ?>
+
 
 <!DOCTYPE html>
 <html lang="es">

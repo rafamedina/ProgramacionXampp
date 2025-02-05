@@ -1,18 +1,18 @@
 <?php
 
-require_once '../controlador/AdminController.php'; // Incluyo el controlador de usuarios
-$controller = new AdminController(); // Creo una instancia del controlador
+require_once '../controlador/AdminController.php'; // Importo el controlador
+$controller = new AdminController(); // Instancio el controlador
 
 session_start(); // Inicio la sesión
 
-// Verifico si el usuario está logueado como admin
+// Verifico si el usuario es admin, si no, lo redirijo
 if (!isset($_SESSION['admin'])) {
     session_destroy();
-    header("Location: ../index.php");  // Si no está logueado, lo envío al login
+    header("Location: ../index.php");
     exit();
 }
 
-// Recojo el Id y lo convierto a INT
+// Obtengo el ID del usuario si se proporciona
 if (isset($_GET['id_usuario'])) {
     $id_usuario = $_GET['id_usuario'];
     $usuario = $controller->obtenerUsuarioporid($id_usuario);
@@ -20,27 +20,26 @@ if (isset($_GET['id_usuario'])) {
     echo "No se proporcionó un ID de usuario.";
 }
 
-$admin = $_SESSION['admin']; // Guardo los datos del admin que inició sesión
-
+$admin = $_SESSION['admin']; // Guardo los datos del admin
 $error_message = null; // Inicializo la variable de error
 
-// Compruebo si se envió el formulario
+// Si se envió el formulario por POST, actualizo los datos del usuario
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Recupero los datos del formulario
     $nombre = $_POST['nombre'];
     $apellidos = $_POST['apellido'];
     $correo = $_POST['correo'];
     $edad = $_POST['edad'];
     $telefono = $_POST['telefono'];
 
-    // Llamo al método para actualizar los datos del usuario
+    // Llamo al método para actualizar el usuario
     $controller->actualizarUsuario($usuario['id_usuario'], $nombre, $apellidos, $correo, $edad, $telefono);
 
-    // Redirijo a la página de alta de usuarios después de actualizar
+    // Redirijo a la misma página con el ID actualizado
     header("Location: Admin_editar_usuarios.php?id_usuario=" . $usuario["id_usuario"]);
 }
 
 ?>
+
 
 <!DOCTYPE html>
 <html lang="es">

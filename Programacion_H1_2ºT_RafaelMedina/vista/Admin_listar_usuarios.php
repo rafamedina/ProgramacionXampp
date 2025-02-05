@@ -1,22 +1,21 @@
 <?php
 require_once '../controlador/AdminController.php';
-session_start(); // Inicio la sesión para gestionar la autenticación
+session_start(); // Inicio sesión para gestionar autenticación
 
-// Verifico si el usuario está logueado como admin
+// Verifico si el usuario es admin
 if (!isset($_SESSION['admin'])) {
     session_destroy();
-    header("Location: ../index.php");  // Si no está logueado, lo redirijo al login
+    header("Location: ../index.php");  // Redirijo al login si no es admin
     exit();
 }
 
-$controller = new AdminController(); // Creo una instancia del controlador
-$error_message = ''; // Variable para manejar errores (aunque aquí no se usa aún)
+$controller = new AdminController(); // Instancio el controlador
+$error_message = ''; // Variable de error (no se usa aquí)
 
-// Obtengo la lista de usuarios con toda su información
-$lista = $controller->obtenerUsuariosCompletos();
-
+$lista = $controller->obtenerUsuariosCompletos(); // Obtengo la lista de usuarios completos
 
 ?>
+
 <!DOCTYPE html>
 <html lang="es">
 

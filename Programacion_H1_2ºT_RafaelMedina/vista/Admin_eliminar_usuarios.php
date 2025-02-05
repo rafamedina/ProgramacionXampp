@@ -1,17 +1,18 @@
 <?php
-require_once '../controlador/AdminController.php'; // Incluyo el controlador de usuarios
+require_once '../controlador/AdminController.php'; // Importo el controlador
 
-$controller = new AdminController(); // Creo una instancia del controlador
+$controller = new AdminController(); // Instancio el controlador
 
-session_start(); // Inicio la sesión
+session_start(); // Inicio sesión
 
-// Verifico si el usuario está logueado como admin
+// Verifico si el usuario es admin
 if (!isset($_SESSION['admin'])) {
     session_destroy();
-    header("Location: ../index.php");  // Si no está logueado, lo envío al login
+    header("Location: ../index.php"); // Redirijo si no es admin
     exit();
 }
-// Recojo el Id y lo convierto a INT
+
+// Obtengo el ID del usuario si está presente
 if (isset($_GET['id_usuario'])) {
     $id_usuario = $_GET['id_usuario'];
     $usuario = $controller->obtenerUsuarioporid($id_usuario);
@@ -19,15 +20,14 @@ if (isset($_GET['id_usuario'])) {
     echo "No se proporcionó un ID de usuario.";
 }
 
-// Compruebo si se envió el formulario para eliminar el usuario
+// Si se envía el formulario, elimino el usuario
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $id_usuario = $_POST['id']; // Obtengo el ID del usuario desde el formulario
-    $controller->eliminarUsuario($usuario["id_usuario"]); // Llamo al método para eliminar el usuario
-    header("Location: Admin_alta_usuarios.php"); // Redirijo a la lista de usuarios después de eliminarlo
+    $controller->eliminarUsuario($usuario["id_usuario"]);
+    header("Location: Admin_alta_usuarios.php"); // Redirijo tras eliminar
     exit();
 }
-
 ?>
+
 
 <!DOCTYPE html>
 <html lang="es">

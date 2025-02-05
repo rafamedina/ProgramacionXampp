@@ -2,10 +2,10 @@
 require_once '../controlador/AdminController.php';
 session_start();
 
-// Verificar si el usuario está logueado, de lo contrario redirigir al login
+// Verifico si el administrador está logueado
 if (!isset($_SESSION['admin'])) {
     session_destroy();
-    header("Location: ../index.php"); // Redirige al login si no está logueado
+    header("Location: ../index.php");
     exit();
 }
 
@@ -16,8 +16,7 @@ $error_message = '';
 $succes_message = '';
 $admin = $_SESSION['admin'];
 
-// Obtener ID del usuario desde GET o POST
-// Recojo el Id y lo convierto a INT
+// Obtengo el ID del usuario
 if (isset($_GET['id_usuario'])) {
     $id_usuario = $_GET['id_usuario'];
 } else {
@@ -30,24 +29,26 @@ if (!$usuario) {
     exit();
 }
 
+// Si se envió el formulario, obtengo los paquetes seleccionados
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $id_paquete1 = !empty($_POST['id_paquete1']) ? $_POST['id_paquete1'] : null;
     $id_paquete2 = !empty($_POST['id_paquete2']) ? $_POST['id_paquete2'] : null;
     $id_paquete3 = !empty($_POST['id_paquete3']) ? $_POST['id_paquete3'] : null;
 
-    // Insertar paquetes en la base de datos
-
-
+    // Inserto los paquetes en la base de datos
     $resultado = $controller->insertarPaquete($usuario["id_usuario"], $usuario["id_plan"], $id_paquete1, $id_paquete2, $id_paquete3);
 
+    // Si hay error, lo almaceno, si no, redirijo
     if (strpos($resultado, "Error") === 0) {
-        $error_message = $resultado; // Captura el mensaje de error
+        $error_message = $resultado;
     } else {
-        // Redirigir manteniendo el ID
         header("Location: Admin_listar_usuarios.php");
-        exit(); // Asegúrate de terminar la ejecución inmediatamente
+        exit();
     }
 }
+?>
+
+
 
 $planUsuario = $controller->obtenerUsuariosCompletosIndividual($usuario["id_usuario"]);
 ?>

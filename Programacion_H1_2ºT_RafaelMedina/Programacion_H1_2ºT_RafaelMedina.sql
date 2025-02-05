@@ -73,7 +73,4 @@ CREATE TABLE Resumen (
     FOREIGN KEY (id_plan) REFERENCES Plan(id_plan) ON DELETE CASCADE  ON update CASCADE
 );
 
-select * from Resumen;
-select * from usuarios;
-update usuarios set contraseña = "$2a$12$Bq8.wXhaOlVM/k0etLLBouTchF20x3LxOsf2Q1jVcIXPPOhn6PpEi"  where id_usuario = 4;
 
