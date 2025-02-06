@@ -95,7 +95,7 @@ class Usuario
         $stmt->close();
     }
 
-    public function agregarTarea($descripcion)
+    public function agregarTarea($usuario, $descripcion)
     {
         $query = "INSERT INTO Tareas (descripcion) VALUES (?)";
 
@@ -105,6 +105,60 @@ class Usuario
         $stmt->bind_param("s", $descripcion);
 
         // Ejecuta la consulta
+        if ($stmt->execute()) {
+            $query2 = "UPDATE Tareas SET id_usuario = ? WHERE id_tarea = LAST_INSERT_ID()";
+            $stmt = $this->conexion->conexion->prepare($query2);
+            $stmt->bind_param("i", $usuario);
+            $stmt->execute();
+            return true;
+        } else {
+            error_log("Error al eliminar usuario: " . $stmt->error);
+            return false;
+        }
+    }
+    public function ResumenTareasUsuario($usuario)
+    {
+        $query = "SELECT id_tarea, descripcion, estado from tareas where id_usuario = ?";
+
+        $stmt = $this->conexion->conexion->prepare($query);
+        $stmt->bind_param("i", $usuario);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        // Retorna todos los resultados como un array asociativo.
+        $planes = $result->fetch_all(MYSQLI_ASSOC);
+        $stmt->close();
+        return $planes;
+    }
+    public function ResumenTareas($usuario)
+    {
+        $query = "SELECT * from tareas where id_usuario = ?";
+
+        $stmt = $this->conexion->conexion->prepare($query);
+        $stmt->bind_param("i", $usuario);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        // Retorna todos los resultados como un array asociativo.
+        $planes = $result->fetch_all(MYSQLI_ASSOC);
+        $stmt->close();
+        return $planes;
+    }
+
+    public function actualizarEstadoTarea($id_tarea, $Completada)
+    {
+        $query = "UPDATE Tareas SET estado = ? where id_tarea = ?";
+        $stmt = $this->conexion->conexion->prepare($query);
+        $stmt->bind_param("si", $Completada, $id_tarea);
+        $stmt->execute();
+        return true;
+    }
+    public function eliminarTarea($id_tarea)
+    {
+        $query = "DELETE FROM Tareas WHERE id_tarea = ?";
+        $stmt = $this->conexion->conexion->prepare($query);
+        $stmt->bind_param("i", $id_tarea);
+
         $stmt->execute();
         $stmt->close();
         return true;

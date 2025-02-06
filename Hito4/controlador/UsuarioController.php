@@ -29,7 +29,24 @@ class UsuarioController
     {
         $this->modelo->eliminarUsuario($id_usuario);
     }
-    public function agregarTarea($descripcion){
-        return $this->modelo->agregarTarea($descripcion);
+    public function agregarTarea($usuario, $descripcion)
+    {
+        return $this->modelo->agregarTarea($usuario, $descripcion);
+    }
+    public function ResumenTareasUsuario($usuario)
+    {
+        return $this->modelo->ResumenTareasUsuario($usuario);
+    }
+    public function ResumenTareas($usuario)
+    {
+        return $this->modelo->ResumenTareas($usuario);
+    }
+    public function actualizarEstadoTarea($id_tarea, $Completada)
+    {
+        return $this->modelo->actualizarEstadoTarea($id_tarea, $Completada);
+    }
+    public function eliminarTarea($id_tarea)
+    {
+        return $this->modelo->eliminarTarea($id_tarea);
     }
 }
