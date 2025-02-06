@@ -29,7 +29,7 @@ class Usuario
             return false;
         }
     }
-    
+
     public function iniciarSesionUsuarios($correo, $password)
     {
         $query = "SELECT * FROM Usuarios WHERE correo = ?";
@@ -55,15 +55,28 @@ class Usuario
         if (!empty($contraseña)) {
             // Si la contraseña no está vacía, se actualiza también
             $contraseñaHashed = password_hash($contraseña, PASSWORD_DEFAULT);
-            $query = "UPDATE Usuarios SET nombre = ?, apellidos = ?, correo = ?, telefono = ?, contraseña = ? WHERE id_usuario = ?";
+            $query = "UPDATE Usuarios SET nombre = ?, apellido = ?, correo = ?, telefono = ?, contraseña = ? WHERE id_usuario = ?";
             $stmt = $this->conexion->conexion->prepare($query);
-            $stmt->bind_param("sssiisi", $nombre, $apellidos, $correo, $telefono, $contraseñaHashed, $id_usuario);
+            $stmt->bind_param("sssssi", $nombre, $apellidos, $correo, $telefono, $contraseñaHashed, $id_usuario);
+            $stmt->execute();
+            return true;
         } else {
             // Si la contraseña está vacía, no se actualiza ese campo
-            $query = "UPDATE Usuarios SET nombre = ?, apellidos = ?, correo = ?, telefono = ? WHERE id_usuario = ?";
+            $query = "UPDATE Usuarios SET nombre = ?, apellido = ?, correo = ?, telefono = ? WHERE id_usuario = ?";
             $stmt = $this->conexion->conexion->prepare($query);
-            $stmt->bind_param("sssiii", $nombre, $apellidos, $correo, $telefono, $id_usuario);
+            $stmt->bind_param("ssssi", $nombre, $apellidos, $correo, $telefono, $id_usuario);
+            $stmt->execute();
+            return true;
         }
     }
-
+    public function obtenerUsuarioporid($id_usuario)
+    {
+        $query = "SELECT * FROM Usuarios WHERE id_usuario = ?";
+        $stmt = $this->conexion->conexion->prepare($query);
+        $stmt->bind_param("i", $id_usuario);
+        $stmt->execute();
+        $resultado = $stmt->get_result();
+        $stmt->close();
+        return $resultado->fetch_assoc();
+    }
 }

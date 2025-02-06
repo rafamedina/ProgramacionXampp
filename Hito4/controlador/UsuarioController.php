@@ -19,6 +19,10 @@ class UsuarioController
     }
     public function actualizarUsuario($id_usuario, $nombre, $apellidos, $correo, $telefono, $contraseña)
     {
-        $this->modelo->actualizarUsuario($id_usuario, $nombre, $apellidos, $correo, $telefono, $contraseña);
-}
+        return $this->modelo->actualizarUsuario($id_usuario, $nombre, $apellidos, $correo, $telefono, $contraseña);
+    }
+    public function obtenerUsuarioporid($id_usuario)
+    {
+        return $this->modelo->obtenerUsuarioporid($id_usuario);
+    }
 }
