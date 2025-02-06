@@ -13,7 +13,7 @@
         <h1 class="mt-4">Bienvenido Usuario!</h1>
         <div class="list-group">
             <a href="vista/UsuariosEditar.php" class="list-group-item list-group-item-action">Editar mis datos</a>
-            <a href="vista/UsuarioResumen.php" class="list-group-item list-group-item-action">Ver mi resumen</a>
+            <a href="vista/TareaAgregar.php" class="list-group-item list-group-item-action">Nueva Tarea</a>
             <a href="vista/cerrar_sesion.php" class="list-group-item list-group-item-action">Salir de la sesión</a>
         </div>
     </div>

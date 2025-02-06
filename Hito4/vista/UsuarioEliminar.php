@@ -48,7 +48,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <h3>Atencion! no hay vuelta atras.</h3>
     <button type="submit" class="btn btn-danger">Eliminar Cuenta</button>
     </form>
-    <a href="../UsuarioMenu.php" class="btn btn-secondary mt-3">Volver</a>
+    <a href="../MenuUsuario.php" class="btn btn-secondary mt-3">Volver</a>
     </div>
 </body>
 

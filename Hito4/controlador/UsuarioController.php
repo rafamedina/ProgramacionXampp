@@ -29,4 +29,7 @@ class UsuarioController
     {
         $this->modelo->eliminarUsuario($id_usuario);
     }
+    public function agregarTarea($descripcion){
+        return $this->modelo->agregarTarea($descripcion);
+    }
 }

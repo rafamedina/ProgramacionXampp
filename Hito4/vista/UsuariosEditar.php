@@ -14,7 +14,6 @@ if (!isset($_SESSION['usuario'])) {
 
 $idusuario = $_SESSION["usuario"]["id_usuario"];
 $usuario = $controller->obtenerUsuarioporid($idusuario);
-var_dump($idusuario);
 if (!$idusuario) { // Verifico si el usuario existe
     echo "Usuario no encontrado.";
     exit();

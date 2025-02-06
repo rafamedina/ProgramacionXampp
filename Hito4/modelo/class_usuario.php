@@ -94,4 +94,19 @@ class Usuario
 
         $stmt->close();
     }
+
+    public function agregarTarea($descripcion)
+    {
+        $query = "INSERT INTO Tareas (descripcion) VALUES (?)";
+
+        $stmt = $this->conexion->conexion->prepare($query);
+
+        // Asegurar que los tipos de datos coincidan
+        $stmt->bind_param("s", $descripcion);
+
+        // Ejecuta la consulta
+        $stmt->execute();
+        $stmt->close();
+        return true;
+    }
 }
