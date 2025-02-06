@@ -25,4 +25,8 @@ class UsuarioController
     {
         return $this->modelo->obtenerUsuarioporid($id_usuario);
     }
+    public function eliminarUsuario($id_usuario)
+    {
+        $this->modelo->eliminarUsuario($id_usuario);
+    }
 }
