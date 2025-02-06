@@ -127,13 +127,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         <td><?= htmlspecialchars($tarea['estado']) ?></td>
                         <td>
                             <?php if ($tarea['estado'] !== 'Completada') : ?>
-                                <a href="?action=completar&id_tarea=<?= htmlspecialchars($tarea['id_tarea']) ?>"
-                                    class="btn btn-info">Marcar como Completada
+                                <a href="?action=completar&id_tarea=<?= $tarea['id_tarea'] ?>" class="btn btn-info"
+                                    onclick="return confirm('¿Estás seguro de que deseas marcar esta tarea como completada?');">
+                                    Marcar como Completada
                                 </a>
                             <?php endif; ?>
 
-                            <a href="?action=eliminar&id_tarea=<?= htmlspecialchars($tarea['id_tarea']) ?>"
-                                class="btn btn-danger"> Eliminar
+                            <!-- Enlace para eliminar -->
+                            <a href="?action=eliminar&id_tarea=<?= $tarea['id_tarea'] ?>" class="btn btn-danger"
+                                onclick="return confirm('¿Estás seguro de que deseas eliminar esta tarea? Esta acción no se puede deshacer.');">
+                                Eliminar
                             </a>
                         </td>
                     </tr>
