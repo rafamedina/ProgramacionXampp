@@ -90,7 +90,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 <body>
     <div class="container">
-        <h1 class="mt-4">Mis Tareas</h1>
 
         <?php if (!empty($error_message)): ?>
             <div class="alert custom-alert-sandybrown">
@@ -110,7 +109,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <button><a href="../MenuUsuario.php" class="list-group-item list-group-item-action">Volver</a></button>
     </div>
     <div class="container">
-        <h1 class="mt-4">Usuarios Registrados</h1>
+        <h1 class="mt-4">Mis Tareas</h1>
         <table class="table table-striped table-bordered">
             <thead>
                 <tr>

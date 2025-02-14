@@ -28,7 +28,7 @@ class Usuario
             $stmt->close();
             return false;
         }
-    }
+    } 
 
     public function iniciarSesionUsuarios($correo, $password)
     {
