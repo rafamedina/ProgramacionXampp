@@ -6,26 +6,29 @@ session_start(); // Inicio sesión
 
 // Verifico si el usuario está logueado
 if (!isset($_SESSION['usuario'])) {
-    session_destroy();
-    header("Location: ../index.php");  // Redirijo al login si no está logueado
-    exit();
+    session_destroy(); // Cierro la sesión si no hay usuario autenticado
+    header("Location: ../index.php");  // Redirijo al login
+    exit(); // Detengo la ejecución del script
 }
 
+// Obtengo el ID del usuario desde la sesión
 $idusuario = $_SESSION["usuario"]["id_usuario"];
-$usuario = $controller->obtenerUsuarioporid($idusuario);
+$usuario = $controller->obtenerUsuarioporid($idusuario); // Obtengo la información del usuario
 
-if (!$idusuario) { // Verifico si existe el usuario
-    echo "Usuario no encontrado.";
-    exit();
+// Verifico si el usuario existe
+if (!$idusuario) { 
+    echo "Usuario no encontrado."; // Muestro un mensaje si no se encuentra el usuario
+    exit(); // Detengo la ejecución del script
 }
 
 // Si el formulario fue enviado, elimino el usuario
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $controller->eliminarUsuario($usuario["id_usuario"]); // Elimino al usuario
-    session_destroy();
+    $controller->eliminarUsuario($usuario["id_usuario"]); // Llamo al método para eliminar al usuario
+    session_destroy(); // Cierro la sesión tras eliminar el usuario
     header("Location: ../index.php"); // Redirijo a la página principal
-    exit();
+    exit(); // Detengo la ejecución para evitar procesamiento adicional
 }
+
 ?>
 
 

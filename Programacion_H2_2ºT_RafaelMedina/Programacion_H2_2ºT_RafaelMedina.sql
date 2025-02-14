@@ -23,6 +23,4 @@ CREATE TABLE IF NOT EXISTS Tareas (
 select * from Tareas;
 
 
-
-SELECT descripcion, estado from tareas where id_usuario = 1;
  

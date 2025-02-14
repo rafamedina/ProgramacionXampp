@@ -7,16 +7,19 @@ session_start(); // Inicio la sesión
 
 // Verifico si el usuario está logueado
 if (!isset($_SESSION['usuario'])) {
-    session_destroy();
+    session_destroy(); // Cierro la sesión por seguridad
     header("Location: ../index.php");  // Redirijo al login si no está logueado
-    exit();
+    exit(); // Detengo la ejecución del script
 }
 
+// Obtengo el ID del usuario desde la sesión
 $idusuario = $_SESSION["usuario"]["id_usuario"];
-$usuario = $controller->obtenerUsuarioporid($idusuario);
-if (!$idusuario) { // Verifico si el usuario existe
-    echo "Usuario no encontrado.";
-    exit();
+$usuario = $controller->obtenerUsuarioporid($idusuario); // Obtengo la información del usuario
+
+// Verifico si el usuario existe
+if (!$idusuario) {  
+    echo "Usuario no encontrado."; // Muestro un mensaje si el usuario no se encuentra
+    exit(); // Detengo la ejecución del script
 }
 
 $error_message = null; // Inicializo la variable de error
@@ -32,14 +35,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // Llamo al método para actualizar los datos del usuario
     $actualizar = $controller->actualizarUsuario($idusuario, $nombre, $apellidos, $correo, $telefono, $contraseña);
+    
     if (!$actualizar) {
-        $error_message = "Error al actualizar los datos del usuario";
+        $error_message = "Error al actualizar los datos del usuario"; // Mensaje de error si la actualización falla
     } else {
-        $error_message = "Usuario Actualizado";
-        header("Location: UsuariosEditar.php");
-    } // Redirijo a la página de edición
-
+        $error_message = "Usuario Actualizado"; // Mensaje de éxito
+        header("Location: UsuariosEditar.php"); // Redirijo a la página de edición
+    }  
 }
+
 
 ?>
 

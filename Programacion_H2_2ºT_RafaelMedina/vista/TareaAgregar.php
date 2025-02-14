@@ -7,59 +7,68 @@ session_start(); // Inicio la sesión
 
 // Verifico si el usuario está logueado
 if (!isset($_SESSION['usuario'])) {
-    session_destroy();
+    session_destroy(); // Cierro la sesión en caso de que no haya usuario autenticado
     header("Location: ../index.php");  // Redirijo al login si no está logueado
-    exit();
+    exit(); // Finalizo la ejecución del script
 }
+
+// Verifico si se ha solicitado marcar una tarea como completada
 if (isset($_GET['action']) && $_GET['action'] == 'completar' && isset($_GET['id_tarea'])) {
-    $id_tarea = intval($_GET['id_tarea']);
+    $id_tarea = intval($_GET['id_tarea']); // Convierto el ID a un número entero por seguridad
 
+    // Llamo al método para actualizar el estado de la tarea a 'Completada'
     if ($controller->actualizarEstadoTarea($id_tarea, 'Completada')) {
-        header("Location: TareaAgregar.php"); // Redirige para reflejar cambios
+        header("Location: TareaAgregar.php"); // Redirijo para reflejar cambios en la página
         exit();
     } else {
-        $error_message = "Error al marcar la tarea como completada.";
+        $error_message = "Error al marcar la tarea como completada."; // Mensaje de error si falla
     }
 }
 
-// Procesar acción de eliminar
+// Verifico si se ha solicitado eliminar una tarea
 if (isset($_GET['action']) && $_GET['action'] == 'eliminar' && isset($_GET['id_tarea'])) {
-    $id_tarea = intval($_GET['id_tarea']);
+    $id_tarea = intval($_GET['id_tarea']); // Convierto el ID a un número entero por seguridad
 
+    // Llamo al método para eliminar la tarea
     if ($controller->eliminarTarea($id_tarea)) {
-        header("Location: TareaAgregar.php"); // Redirige para reflejar cambios
+        header("Location: TareaAgregar.php"); // Redirijo para reflejar cambios
         exit();
     } else {
-        $error_message = "Error al eliminar la tarea.";
+        $error_message = "Error al eliminar la tarea."; // Mensaje de error si falla
     }
 }
+
+// Obtengo el ID del usuario desde la sesión
 $idusuario = $_SESSION["usuario"]["id_usuario"];
-$usuario = $controller->obtenerUsuarioporid($idusuario);
-$tabla = $controller->ResumenTareasUsuario($usuario["id_usuario"]);
-if (!$idusuario) { // Verifico si el usuario existe
-    echo "Usuario no encontrado.";
-    exit();
+$usuario = $controller->obtenerUsuarioporid($idusuario); // Obtengo la información del usuario
+$tabla = $controller->ResumenTareasUsuario($usuario["id_usuario"]); // Obtengo el listado de tareas del usuario
+
+// Verifico si el usuario existe
+if (!$idusuario) { 
+    echo "Usuario no encontrado."; // Muestro un mensaje si no se encuentra el usuario
+    exit(); // Detengo la ejecución del script
 }
-$error_message = null; // Inicializo la variable de error
+
+$error_message = null; // Inicializo la variable para mensajes de error
 
 // Verifico si el formulario ha sido enviado
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Recuperar y limpiar los datos del formulario
+    // Recupero y limpio los datos del formulario
     $descripcion = isset($_POST['descripcion']) ? trim($_POST['descripcion']) : '';
 
-    // Verificar que la descripción no esté vacía
+    // Verifico que la descripción de la tarea no esté vacía
     if (empty($descripcion)) {
-        $error_message = "La descripción de la tarea no puede estar vacía.";
+        $error_message = "La descripción de la tarea no puede estar vacía."; // Mensaje de error si está vacía
     } else {
-        // Llamar al método para agregar la tarea
+        // Llamo al método para agregar la nueva tarea
         $NuevaTarea = $controller->agregarTarea($usuario["id_usuario"], $descripcion);
 
         if (!$NuevaTarea) {
-            $error_message = "Error al añadir tarea.";
+            $error_message = "Error al añadir tarea."; // Mensaje de error si falla la inserción
         } else {
-            $success_message = "Tarea añadida con éxito.";
-            header("Location: TareaAgregar.php");
-            exit; // Asegura que el script se detiene después de redirigir
+            $success_message = "Tarea añadida con éxito."; // Mensaje de éxito
+            header("Location: TareaAgregar.php"); // Redirijo para reflejar los cambios en la página
+            exit(); // Aseguro que el script se detenga después de redirigir
         }
     }
 }
