@@ -8,7 +8,7 @@ retirar($cantidad): Reduce el saldo si la cantidad es menor o igual al saldo dis
 mostrarInfo(): Muestra los datos del titular, el tipo de cuenta y el saldo actual.
 Crea una instancia de CuentaBancaria, realiza varias operaciones y muestra la información final.
 */
-
+/*Prueba github*/
 class Banco
 {
     private $titular;
